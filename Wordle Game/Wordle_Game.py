@@ -3,9 +3,7 @@
 #############################
 
 # TODO
-#   fix check for initial guess being correct
 #   fix layout so that things are clearer
-#   Add an initial intro and description before game
 #   Check users guess is a real word
 #   randomly pick a hidden word each game
 
@@ -54,11 +52,6 @@ def check_word(users_guess):
     if not users_guess:
         return
 
-    if users_guess == hidden_word:
-        print("user guessed the word")
-        correct_guesses == users_guess
-        return
-
     for char in users_guess:
         if char in hidden_word:
             character_found(users_guess, char)
@@ -93,6 +86,7 @@ def get_users_guess():
 
 def play_game():
     while correct_guesses != hidden_word and guesses_remaining > 0:
+        global yellow_descriptor
         yellow_descriptor = "     "
         print("Hidden Word: " + correct_guesses)
         print("Guessed Left:    " + str(guesses_remaining))
@@ -107,5 +101,20 @@ def play_game():
         game_lost()
 
 
+def intro():
+    print("Welcome to Python Wordle!")
+    print("Guess the hidden word by gussing 5 letter words")
+    print(
+        "if your guess contains the correct letter in the CORRECT position then the hidden words letter will be revealed"
+    )
+    print(
+        "if your guess contains the correct letter in the WRONG position then the letter in your guess will be highlighted (underlined)"
+    )
+    print("but the hidden letter will not be unvieled until it's found")
+    print("You have 6 guesses to find the word")
+    print("GOOD LUCK!")
+
+
 # main
+intro()
 play_game()
