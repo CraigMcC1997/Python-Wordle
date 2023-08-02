@@ -2,13 +2,18 @@
 # temp basic wordle example #
 #############################
 
-# update correct_guesses if the letter is in the chosen(hard coded) word
+# TODO
+#   fix check for initial guess being correct
+#   fix layout so that things are clearer
+#   Add an initial intro and description before game
+#   Check users guess is a real word
+#   randomly pick a hidden word each game
+
 
 hidden_word = "later"  # Word the user has to guess
 correct_guesses = "XXXXX"  # current collection of correct letters
-yellow_descriptor = "     "
+yellow_descriptor = "     "  # empty string to be filled with correct letter descriptors
 guesses_remaining = 6  # how many guesses the user has before game ends
-print(hidden_word)
 
 
 # updates the correct_guesses string to store that the letter has been found
@@ -22,26 +27,23 @@ def Update_Guesses_String(index, char):
 def print_yellow_descriptor(index, users_guess):
     print(users_guess)
     global yellow_descriptor
-    yellow_descriptor = yellow_descriptor[0:index] + "-" + yellow_descriptor[index + 1 :]
+    yellow_descriptor = (
+        yellow_descriptor[0:index] + "-" + yellow_descriptor[index + 1 :]
+    )
     print(yellow_descriptor)
 
 
 def check_character_location(users_guess, char):
     index1 = users_guess.find(char)
     index2 = hidden_word.find(char)
-    print("char location in users input: " + str(index1))
-    print("char location in hidden word: " + str(index2))
 
     if index1 == index2:
-        print("GREEN LETTER FOUND")
         Update_Guesses_String(index2, char)
     else:
-        print("YELLOW LETTER FOUND")
         print_yellow_descriptor(index1, users_guess)
 
 
 def character_found(users_guess, char):
-    print("char found: " + char)
     check_character_location(users_guess, char)
 
 
@@ -70,25 +72,40 @@ def game_lost():
     print("Word was not found!!, the word was... " + hidden_word)
 
 
+print(hidden_word)
+
+
 # Until the word is correctly guessed
 # Ask the user for a guess at the word
 # ensure they have entered a 5 letter word
 # check if that word is correct or contains letter within the hidden word
-while correct_guesses != hidden_word and guesses_remaining > 0:
-    yellow_descriptor = "     "
-    print("Correct Letters: " + correct_guesses)
-    print("Guessed Left:    " + str(guesses_remaining))
-    user_input = input("Please guess a letter: ").lower()
+def get_users_guess():
+    user_input = input("Please guess a word: ").lower()
 
     if len(user_input) != 5:
-        continue
+        return
 
+    global guesses_remaining
     guesses_remaining -= 1
-    check_word(user_input)
-    print("-----------------")
 
-if guesses_remaining > 0:
-    game_won()
-else:
-    game_lost()
-    game_lost()
+    return user_input
+
+
+def play_game():
+    while correct_guesses != hidden_word and guesses_remaining > 0:
+        yellow_descriptor = "     "
+        print("Hidden Word: " + correct_guesses)
+        print("Guessed Left:    " + str(guesses_remaining))
+        user_input = get_users_guess()
+        check_word(user_input)
+        print("-----------------")
+
+    if guesses_remaining > 0:
+        game_won()
+    else:
+        game_lost()
+        game_lost()
+
+
+# main
+play_game()
